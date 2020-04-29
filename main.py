@@ -26,7 +26,7 @@ def view_pokemon():
     try:
         request_data = request.get_json()
         data = get_pokemon(request_data["name"])
-        if (data['error'] == "true"):
+        if data["error"] == "true":
             status = ErrorObject("true", "200", data["msg"])
             data = ""
             api_response = ApiResponse(data, status)
@@ -130,4 +130,5 @@ def view_types():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
