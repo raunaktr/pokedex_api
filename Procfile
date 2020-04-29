@@ -1,1 +1,1 @@
-web: python ./pokedex_api/main.py
+web: python app.main:main
