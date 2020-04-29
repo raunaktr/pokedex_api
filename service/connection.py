@@ -82,7 +82,6 @@ def get_pokemon_by_name(name):
             init_list = []
             for i in fetched_val:
                 init_list.append(i.get("_source"))
-            # print(init_list[0])
             return {"msg": init_list[0], "error": "true"}
         else:
             return {"msg": "Pokemon not found", "error": "true"}
@@ -145,32 +144,6 @@ def get_pokemon_by_types(type):
         return "Error occured:", str(e)
 
 
-# get_pokemon_by_types('flying')
-
-#### use N-gram tokenizer (To be worked on)
-# def get_pokemon_by_height(lower_bound, upper_bound):
-#     try:
-#         fetch_val = es.search(
-#             index="pokedex",
-#             body={"query": {"bool": {"must": [{"term": {"height.keyword": height}}]}}},
-#         )
-#         temp = fetch_val.get("hits").get("hits")
-
-#         if len(temp) != 0:
-#             init_list = []
-#             for i in temp:
-#                 init_list.append(i.get("_source", {}))
-#             return print(init_list)
-#         else:
-#             return print({"msg": "Pokemon not found", "error": "true"})
-#     except Exception as e:
-#         traceback.print_exc()
-#         return "Error occured:", str(e)
-
-# get_pokemon_by_height("1.60 m")
-# def get_pokemon_by_weight():
-
-
 def get_pokemons_by_weaknesses(weaknesses):
     try:
         fetch_val = es.search(
@@ -196,16 +169,42 @@ def get_pokemons_by_weaknesses(weaknesses):
         return "Error occured:", str(e)
 
 
-# response filetering function
-# def get_pokemonsssss_by_weaknesses(weaknesses):
+# response filtering function
+def get_pokemonsssss_by_weaknesses(weaknesses):
+    try:
+        fetch_val = es.search(
+            index="pokedex", filter_path=["hits.hits._id", "hits.hits._type"]
+        )
+        print(fetch_val)
+    except Exception as e:
+        traceback.print_exc()
+        return "Error occured:", str(e)
+
+
+# get_pokemon_by_types('flying')
+
+#### use N-gram tokenizer (To be worked on)
+# def get_pokemon_by_height(lower_bound, upper_bound):
 #     try:
 #         fetch_val = es.search(
-#             index="pokedex", filter_path=["hits.hits._id", "hits.hits._type"]
+#             index="pokedex",
+#             body={"query": {"bool": {"must": [{"term": {"height.keyword": height}}]}}},
 #         )
-#         print(fetch_val)
+#         temp = fetch_val.get("hits").get("hits")
+
+#         if len(temp) != 0:
+#             init_list = []
+#             for i in temp:
+#                 init_list.append(i.get("_source", {}))
+#             return print(init_list)
+#         else:
+#             return print({"msg": "Pokemon not found", "error": "true"})
 #     except Exception as e:
 #         traceback.print_exc()
 #         return "Error occured:", str(e)
+
+# get_pokemon_by_height("1.60 m")
+# def get_pokemon_by_weight():
 
 
 ############################################

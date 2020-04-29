@@ -10,7 +10,7 @@ from app.pokemon.get_name_service import get_pokemon
 from app.pokemon.get_evolution_service import evolution
 from app.pokemon.get_weaknesses_service import get_weaknesses
 from app.pokemon.get_type_service import get_types
-
+from app.routes import routes  # routes
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
@@ -21,112 +21,11 @@ def home():
     return "welcome to pokedex"
 
 
-@app.route("/name", methods=["GET"])
-def view_pokemon():
-    try:
-        request_data = request.get_json()
-        data = get_pokemon(request_data["name"])
-        if data["error"] == "true":
-            status = ErrorObject("true", "200", data["msg"])
-            data = ""
-            api_response = ApiResponse(data, status)
-        else:
-            status = ErrorObject("false", "200", "working")
-            api_response = ApiResponse(data["msg"], status)
-
-        json_data = json.dumps(
-            api_response.__dict__, default=lambda o: o.__dict__, indent=4
-        )
-        return json_data
-    except Exception as e:
-        traceback.print_exc()
-        status = ErrorObject("true", "400", str(e))
-        api_response = ApiResponse("", status)
-        json_data = json.dumps(
-            api_response.__dict__, default=lambda o: o.__dict__, indent=4
-        )
-        return json_data
-
-
-@app.route("/evolutions", methods=["GET"])
-def view_evolutions():
-    try:
-        request_data = request.get_json()
-        data = evolution(request_data["name"])
-
-        if data["error"] == "true":
-            status = ErrorObject("true", "200", data["msg"])
-            data = ""
-            api_response = ApiResponse(data, status)
-        else:
-            status = ErrorObject("false", "200", "working")
-            api_response = ApiResponse(data["msg"], status)
-        json_data = json.dumps(
-            api_response.__dict__, default=lambda o: o.__dict__, indent=4
-        )
-        return json_data
-    except Exception as e:
-        traceback.print_exc()
-        status = ErrorObject("true", "400", str(e))
-        api_response = ApiResponse("", status)
-        json_data = json.dumps(
-            api_response.__dict__, default=lambda o: o.__dict__, indent=4
-        )
-        return json_data
-
-
-@app.route("/weaknesses")
-def check_weaknesses():
-    try:
-        request_data = request.get_json()
-        data = get_weaknesses(request_data["weaknesses"])
-
-        if data["error"] == "true":
-            status = ErrorObject("true", "200", data["msg"])
-            data = ""
-            api_response = ApiResponse(data, status)
-        else:
-            status = ErrorObject("false", "200", "working")
-            api_response = ApiResponse(data["msg"], status)
-        json_data = json.dumps(
-            api_response.__dict__, default=lambda o: o.__dict__, indent=4
-        )
-        return json_data
-    except Exception as e:
-        traceback.print_exc()
-        status = ErrorObject("true", "400", str(e))
-        api_response = ApiResponse("", status)
-        json_data = json.dumps(
-            api_response.__dict__, default=lambda o: o.__dict__, indent=4
-        )
-        return json_data
-
-
-@app.route("/types")
-def view_types():
-    try:
-        request_data = request.get_json()
-        data = get_types(request_data["type"])
-
-        if data["error"] == "true":
-            status = ErrorObject("true", "200", data["msg"])
-            data = ""
-            api_response = ApiResponse(data, status)
-        else:
-            status = ErrorObject("false", "200", "working")
-            api_response = ApiResponse(data["msg"], status)
-        json_data = json.dumps(
-            api_response.__dict__, default=lambda o: o.__dict__, indent=4
-        )
-        return json_data
-    except Exception as e:
-        traceback.print_exc()
-        status = ErrorObject("true", "400", str(e))
-        api_response = ApiResponse("", status)
-        json_data = json.dumps(
-            api_response.__dict__, default=lambda o: o.__dict__, indent=4
-        )
-        return json_data
+# add_url_rule imports routes from app>>routes>>routes.py
+app.add_url_rule("/name", view_func=routes.view_pokemon)
+app.add_url_rule("/evolutions", view_func=routes.view_evolutions)
+app.add_url_rule("/weaknesses", view_func=routes.check_weaknesses)
+app.add_url_rule("/types", view_func=routes.view_types)
 
 
 if __name__ == "__main__":
